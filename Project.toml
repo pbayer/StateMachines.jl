@@ -1,0 +1,13 @@
+name = "StateMachines"
+uuid = "4408604f-56ef-45f1-95dd-97acffad16aa"
+authors = ["Paul Bayer"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
