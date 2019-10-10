@@ -8,3 +8,7 @@
 Experiments with state machines in Julia - see `doc/notebooks`.
 
 Will be implemented then as a package.
+
+### Modeling Entities as State machines
+
+Entities in discrete event systems respond to events and change their states accordingly. Therefore they can be modeled as state machines.
