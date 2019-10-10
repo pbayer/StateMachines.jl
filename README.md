@@ -5,6 +5,6 @@
 [![Codecov](https://codecov.io/gh/pbayer/StateMachines.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/pbayer/StateMachines.jl)
 [![Coveralls](https://coveralls.io/repos/github/pbayer/StateMachines.jl/badge.svg?branch=master)](https://coveralls.io/github/pbayer/StateMachines.jl?branch=master)
 
-Experiments with state machines in Julia - see the notebooks.
+Experiments with state machines in Julia - see `doc/notebooks`.
 
 Will be implemented then as a package.
