@@ -5,6 +5,9 @@ abstract type State end
 abstract type DEvent end
 abstract type Work end
 
+include("States.jl")
+include("Events.jl")
+
 """
     step!(A::StateMachine, q::State, σ::DEvent)
 
@@ -33,6 +36,10 @@ function step!(A::StateMachine, q::State, σ::DEvent)
             "$name: step!(::$(typeof(A)), ::$(typeof(q)), ::$(typeof(σ)))")
 end
 
-export DEvent, State, StateMachine, step!
+export  DEvent, Init, Enter, Load, Switch, Finish, Unload, Leave, Get,
+                Fail, Repair, Call, Log, Step, Run, Start, Stop, Resume,
+        State,  Undefined, Idle, Setup, Busy, Blocked, Halted, Empty,
+                Ready, Full, Failed, Waiting, InProcess
+        StateMachine, step!
 
 end # module
