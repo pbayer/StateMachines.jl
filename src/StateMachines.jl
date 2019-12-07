@@ -1,40 +1,35 @@
+# This file is part of the StateMachines.jl Julia package
+#
+# Paul Bayer
+# MIT License
+# Github: https://github.com/pbayer/StateMachines.jl
+#
+
+"""
+    StateMachines
+
+A Julia package for state machines following loosely the system design language
+[SDL](http://sdl-forum.org/index.htm).
+
+It can (after registration) be installed with:
+```julia
+] add StateMachines
+```
+
+The development version can be installed with:
+```julia
+] add("https://github.com/pbayer/StateMachines.jl")
+```
+"""
 module StateMachines
 
-abstract type StateMachine end
-abstract type State end
-abstract type DEvent end
-abstract type Work end
+include("types.jl")
+include("systems.jl")
+include("blocks.jl")
+include("states.jl")
+include("events.jl")
+include("transitions.jl")
 
-include("States.jl")
-include("Events.jl")
-
-"""
-    step!(A::StateMachine, q::State, σ::DEvent)
-
-transition function δ causing a state machine A in state q₁ at event σ
-to take on a new state q₂.
-
-For all specified transitions Δ: Q × Σ → P(Q) of A a `step!`-function has to
-be implemented. For unspecified transitions a fallback step function is
-called and a warning is generated.
-
-# Arguments
-- `A::StateMachine`: a state machine
-- `q::State`: any state ∈ Q
-- `σ::DEvent`: any discrete event ∈ Σ
-"""
-function step!(A::StateMachine, q::State, σ::DEvent)
-    at = ""
-    try
-        if !isa(A.sim, Number)
-            at = "at $(now(A.sim))"
-        end
-    catch
-    end
-    name = hasfield(typeof(A), :name) ? A.name : ""
-    println(stderr, "Warning: undefined transition $at for ",
-            "$name: step!(::$(typeof(A)), ::$(typeof(q)), ::$(typeof(σ)))")
-end
 
 export  DEvent, Init, Enter, Load, Switch, Finish, Unload, Leave, Get,
                 Fail, Repair, Call, Log, Step, Run, Start, Stop, Resume,

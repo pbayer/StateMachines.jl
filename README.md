@@ -1,5 +1,7 @@
 # StateMachines.jl
 
+A [Julia](https://julialang.org) package for state machines following loosely the system design language [SDL](http://sdl-forum.org/index.htm).
+
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://pbayer.github.io/StateMachines.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://pbayer.github.io/StateMachines.jl/dev)
 [![Build Status](https://travis-ci.com/pbayer/StateMachines.jl.svg?branch=master)](https://travis-ci.com/pbayer/StateMachines.jl)
@@ -7,13 +9,7 @@
 [![Codecov](https://codecov.io/gh/pbayer/StateMachines.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/pbayer/StateMachines.jl)
 [![Coverage Status](https://coveralls.io/repos/github/pbayer/StateMachines.jl/badge.svg?branch=master)](https://coveralls.io/github/pbayer/StateMachines.jl?branch=master)
 
-Framework for state machines in Julia. This Package is a stub and will be developed to a useful state over the next days.
-
-### State machines in Julia
-
-State machines are an important topic in modeling, simulation, automation and control engineering. Julia with its multiple dispatch feature is particularly practical and elegant in implementing them.
-
-This package will provide a useful framework and many examples for state machines in Julia.
+`StateMachines.jl` provides a framework to describe, model and simulate communicating and queueing systems. Its components are processes or blocks of processes communicating via channels. Processes behave as state machines with defined transitions between their states. Through state actions processes can change their environment e.g. by doing calculations or communicating with other processes.
 
 ### Examples
 
