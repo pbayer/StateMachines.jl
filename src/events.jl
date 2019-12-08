@@ -8,68 +8,68 @@
 # define typical events
 
 "event `Init(info)` with some initialization info"
-struct Init <: DEvent
+struct Init <: SEvent
     info::Any
 end
 
 "event `Enter(job)` with some job (jobs have a field job.duration)"
-struct Enter <: DEvent
+struct Enter <: SEvent
     job::Any
 end
 
-struct Load <: DEvent end
+struct Load <: SEvent end
 
 "event `Switch(to)` for task switching"
-struct Switch <: DEvent
+struct Switch <: SEvent
     to
 end
 
 "event for finishing Setup or Busy"
-struct Finish <: DEvent end
+struct Finish <: SEvent end
 
 "event for unloading a server"
-struct Unload <: DEvent end
+struct Unload <: SEvent end
 
 "event `Leave(job)` for prematurely leaving a buffer"
-struct Leave <: DEvent
+struct Leave <: SEvent
     job::Any
 end
 
-struct Get <: DEvent end
+struct Get <: SEvent end
 
 "event `Fail(ttr)` with ttr: time to repair"
-struct Fail <: DEvent
+struct Fail <: SEvent
     ttr::Float64
 end
 
-struct Repair <: DEvent end
+struct Repair <: SEvent end
 
 "event `Call(from, info)` to a state machine with sender and some info."
-struct Call <: DEvent
+struct Call <: SEvent
     from
     info
 end
 
-"event `Log(A::StateMachine,σ::DEvent,info)` for logging "
-struct Log <: DEvent
-    A::StateMachine
-    σ::DEvent
+"event `Log(A::Process, σ::SEvent, info)` for logging "
+struct Log <: SEvent
+    A::Process
+    σ::SEvent
     info::Any
 end
 
 "event for user interaction"
-struct Step <: DEvent end
+struct Step <: SEvent end
 
 "event `Run(duration)` for user interaction"
-struct Run <: DEvent
+struct Run <: SEvent
     duration::Float64
 end
 
 "event for user interaction"
-struct Start <: DEvent end
+struct Start <: SEvent end
 
 "event for user interaction"
-struct Stop <: DEvent end
+struct Stop <: SEvent end
 
 "event for user interaction"
-struct Resume <: DEvent end
+struct Resume <: SEvent end

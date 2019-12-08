@@ -23,6 +23,8 @@ The development version can be installed with:
 """
 module StateMachines
 
+using Simulate
+
 include("types.jl")
 include("systems.jl")
 include("blocks.jl")
@@ -31,10 +33,10 @@ include("events.jl")
 include("transitions.jl")
 
 
-export  DEvent, Init, Enter, Load, Switch, Finish, Unload, Leave, Get,
+export  SEvent, Init, Enter, Load, Switch, Finish, Unload, Leave, Get,
                 Fail, Repair, Call, Log, Step, Run, Start, Stop, Resume,
         State,  Undefined, Idle, Setup, Busy, Blocked, Halted, Empty,
                 Ready, Full, Failed, Waiting, InProcess
-        StateMachine, step!
+        System, Block, Process, step!
 
 end # module
