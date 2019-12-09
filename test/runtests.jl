@@ -1,6 +1,27 @@
-using StateMachines
+using StateMachines, Simulate
 using Test
 
-@testset "StateMachines.jl" begin
-    # Write your own tests here.
+println("...... testing StateMachines.jl ......")
+@testset "types.jl" begin
+    include("test_types.jl")
+end
+
+@testset "system.jl" begin
+    include("test_system.jl")
+end
+
+@testset "block.jl" begin
+    include("test_block.jl")
+end
+
+@testset "state.jl" begin
+    include("test_state.jl")
+end
+
+@testset "event.jl" begin
+    include("test_event.jl")
+end
+
+@testset "transition.jl" begin
+    include("test_transition.jl")
 end

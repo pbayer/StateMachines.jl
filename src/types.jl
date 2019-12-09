@@ -14,13 +14,14 @@ const Id = AbstractString
 
 "An abstract type for `System`, `Block` and `Process`."
 abstract type Agent end
+abstract type StateMachine end
 abstract type State end
 abstract type SEvent end
 
 """
     System(id::Id, clk::Clock)
 
-A system is the outer container of blocks and processes. It has one or more
+A system is the outermost container of blocks and processes. It has one or more
 input channels and one or more output channels. It cannot contain other systems,
 but it can interact with other systems.
 
@@ -63,11 +64,11 @@ mutable struct Block <: Agent
     childs::Dict{Id, Agent}
 
     Block(id::Id, surr::Agent) =
-            new(id, surr, Undefined(), Dict{Id, Channel}, Dict{Id, Agent}())
+            new(id, surr, Undefined(), Dict{Id, Channel}(), Dict{Id, Agent}())
 end
 
 """
-    Process()
+    Process{T}(id::Id, sm::T, surr::Agent) where {T <: StateMachine}
 
 A process is a container for a state machine. It cannot contain other processes.
 It has one input and one output channel. It registers to a `Block` or a `System`.
@@ -78,12 +79,13 @@ It has one input and one output channel. It registers to a `Block` or a `System`
 - `state::State`: this is read and changed by the process's state machine,
 - `gate::Dict{Id, Channel}`: events and tokens flow through the gates,
 """
-mutable struct Process <: Agent
+mutable struct Process{T <: StateMachine} <: Agent
     id::Id
+    sm::T
     surr::Agent
     state::State
-    input::Channel
-    output::Channel
+    gate::Dict{Id, Channel}
 
-    Process(id::Id, surr::Agent) = new(id, surr, Undefined(), Dict{Id, Channel}())
+    Process{T}(id::Id, sm::T, surr::Agent) where {T <: StateMachine} =
+            new(id, sm, surr, Undefined(), Dict{Id, Channel}())
 end

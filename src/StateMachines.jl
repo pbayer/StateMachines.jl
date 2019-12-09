@@ -26,17 +26,16 @@ module StateMachines
 using Simulate
 
 include("types.jl")
-include("systems.jl")
-include("blocks.jl")
-include("states.jl")
-include("events.jl")
-include("transitions.jl")
+include("system.jl")
+include("block.jl")
+include("process.jl")
+include("state.jl")
+include("event.jl")
+include("transition.jl")
 
 
-export  SEvent, Init, Enter, Load, Switch, Finish, Unload, Leave, Get,
-                Fail, Repair, Call, Log, Step, Run, Start, Stop, Resume,
-        State,  Undefined, Idle, Setup, Busy, Blocked, Halted, Empty,
-                Ready, Full, Failed, Waiting, InProcess
-        System, Block, Process, step!
+export  SEvent,
+        State,
+        System, Block, Process, StateMachine, step!
 
 end # module

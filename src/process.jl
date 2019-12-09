@@ -13,7 +13,7 @@ Returns the system clock of a process
 function clock(p::Process)::Clock
     agent = p
     while !isa(agent.surr, System)
-        agent = surr
+        agent = agent.surr
     end
     return agent.surr.clk
 end
