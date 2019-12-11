@@ -26,7 +26,7 @@ module StateMachines
 using Simulate
 
 include("types.jl")
-include("system.jl")
+include("box.jl")
 include("block.jl")
 include("process.jl")
 include("state.jl")
@@ -36,6 +36,6 @@ include("transition.jl")
 
 export  SEvent,
         State,
-        System, Block, Process, StateMachine, step!
+        System, StateMachine, Box, Block, Process, step!
 
 end # module

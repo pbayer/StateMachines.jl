@@ -6,8 +6,8 @@ println("...... testing StateMachines.jl ......")
     include("test_types.jl")
 end
 
-@testset "system.jl" begin
-    include("test_system.jl")
+@testset "box.jl" begin
+    include("test_box.jl")
 end
 
 @testset "block.jl" begin
