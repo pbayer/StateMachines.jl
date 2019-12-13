@@ -50,9 +50,9 @@ struct Call <: SEvent
     info
 end
 
-"event `Log(A::Process, σ::SEvent, info)` for logging "
+"event `Log(A::StateMachine, σ::SEvent, info)` for logging "
 struct Log <: SEvent
-    A::Process
+    A::StateMachine
     σ::SEvent
     info::Any
 end

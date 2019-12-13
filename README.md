@@ -11,9 +11,9 @@ A [Julia](https://julialang.org) package for state machines.
 
 `StateMachines.jl` provides a framework to describe, model and simulate communicating and queueing systems. A *system* has different incarnations or levels:
 
-1. the outer *box* providing a clock and an interface to the environment and containing *blocks* and *processes*.
+1. the outer *box* provides a clock and an interface to the environment and contains *blocks* and *state machines*.
 2. Blocks can be nested and used to construct more and deeper levels.
-3. Processes are the basic operating units and behave as *state machines* with defined *transitions* between their *states*. Through their *activities* processes can change their environment and communicate with other processes or blocks via *channels*.
+3. State machines implement the model behavior with defined *transitions* between their *states*. Through *actions* processes change their environment and communicate with other processes or blocks via *channels*.
 
 ### Examples
 

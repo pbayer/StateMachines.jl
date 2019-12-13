@@ -7,7 +7,7 @@
 
 
 """
-    step!(A::Process, q::State, σ::SEvent)
+    step!(A::StateMachine, q::State, σ::SEvent)
 
 transition function δ causing a state machine A in state q₁ at event σ
 to take on a new state q₂.
@@ -17,11 +17,11 @@ be implemented. For unspecified transitions a fallback step function is
 called and a warning is generated.
 
 # Arguments
-- `A::Process`: a process
+- `A::StateMachine`: a state machine
 - `q::State`: any state ∈ Q
 - `σ::SEvent`: any discrete event ∈ Σ
 """
-function step!(A::Process, q::State, σ::SEvent)
+function step!(A::StateMachine, q::State, σ::SEvent)
     at = ""
     try
         if !isa(A.sim, Number)

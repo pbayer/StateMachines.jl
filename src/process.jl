@@ -6,12 +6,12 @@
 #
 
 """
-    clock(p::Process)::Clock
+    clock(A::StateMachine)::Clock
 
-Returns the system clock of a process
+Returns the system clock of a state machine.
 """
-function clock(p::Process)::Clock
-    agent = p
+function clock(A::StateMachine)::Clock
+    agent = A
     while !isa(agent.surr, Box)
         agent = agent.surr
     end

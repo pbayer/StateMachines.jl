@@ -27,15 +27,16 @@ using StateMachines
 A system has different levels, which are used to hide complexity.
 
 ```@docs
+Id
 System
 Box
 Block
 ```
 
-`StateMachine` and `Process` are used to describe the activities of a system:
+`Model` and `StateMachine` are used to describe the activities of a system
 ```@docs
+Model
 StateMachine
-Process
 ```
 
 ## State machines
@@ -50,6 +51,7 @@ Process
 
 ### Transitions
 ```@docs
+step!
 ```
 
 ### Operation

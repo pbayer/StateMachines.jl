@@ -36,6 +36,6 @@ include("transition.jl")
 
 export  SEvent,
         State,
-        System, StateMachine, Box, Block, Process, step!
+        System, Model, StateMachine, Box, Block, step!
 
 end # module

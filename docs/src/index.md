@@ -1,10 +1,16 @@
 # StateMachines.jl
 
-`StateMachines.jl` provides a Julia framework to describe, model and simulate communicating and queueing systems. A *system* has different incarnations or levels: 
+`StateMachines.jl` provides a practical way to describe, model and simulate communicating and queueing systems  in Julia.
 
-1. the outer *box* providing a clock and an interface to the environment and containing *blocks* and *processes*.
-2. Blocks can be nested and used to construct more and deeper levels.
-3. Processes are the basic operating units and behave as *state machines* with defined *transitions* between their *states*. Through their *activities* processes can change their environment and communicate with other processes or blocks via *channels*.
+A [`System`](@ref) has different representations or levels:
+
+1. The outer [`Box`](@ref) provides a clock and an interface to the environment and
+  contains *blocks* and *processes*.
+2. A [Block`](@ref) can be nested and used to construct more and deeper system levels.
+  It contains blocks and processes.
+3. A [`StateMachine`](@ref) is used to implement the behaviour of a [`Model`](@ref)
+  with defined *transitions* between *states*. Through *actions* state machines change
+  their environment and communicate with other processes or blocks via *channels*.
 
 ## Installation
 

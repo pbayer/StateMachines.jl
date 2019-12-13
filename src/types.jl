@@ -2,7 +2,7 @@
 #
 # Paul Bayer
 # MIT License
-# Github: https://github.com/pbayer/StateMachines.jl
+# Github: https://github.com/pbayer/Models.jl
 #
 
 """
@@ -12,42 +12,41 @@ An identifier used to identify and to register system components.
 """
 const Id = AbstractString
 
-"An abstract type for `Box`, `Block` and `Process`."
+"An common supertype for `Box`, `Block` and `StateMachine`."
 abstract type System end
 
 """
-    StateMachine
+    Model
 
-An abstract type for StateMachines. It is used to declare concrete state machines in
-an implementation.
+An abstract type used to declare the types of state machines, you want to implement.
 
 # Example
 ```julia
 using StateMachines, Simulate
 
-struct SM1 <: StateMachine end       # first you declare some state machine types
-struct SM2 <: StateMachine end       # you want to use
+struct M1 <: Model end               # define the models
+struct M2 <: Model end
 
-S1 = Box("Box", 𝐶)                   # then you build a system,
+S1 = Box("Box", 𝐶)                   # define their environment,
 B1 = Block("B1", S1)                 # maybe containing one or more blocks
 
-P1 = Process("P1", SM1(), B1)        # processes inside a block act as state machines
-P2 = Process("P2", SM2(), B1)
+SM1 = StateMachine("SM1", M1(), B1)  # create state machine variables
+SM2 = StateMachine("SM2", M2(), B1)
 
-function step!(A::Process{SM1}, ::Idle, σ::Load)  # transition functions define the
-    [....]                                        # activities of a process, maybe
-end                                               # using other functions
-function step!(A::Process{SM1}, ::Busy, σ::Fail) = [....]
-function step!(A::Process{SM1}, ::Failed, ::Repair) = [....]
+function step!(A::StateMachine{M1}, ::Idle, σ::Load)  # transition functions
+    [....]                                            # implement their behaviour
+end
+function step!(A::StateMachine{M1}, ::Busy, σ::Fail) = [....]
+function step!(A::StateMachine{M1}, ::Failed, ::Repair) = [....]
 [....]
 
-while true                           # later at runtime
-    event = put!(P1.gate[“in”])      # an event is read from an input channel
-    step!(P1, P1.state, event)       # and a process transition is called
-end                                  # depending on its state and an incoming event
+while true                           # later at runtime ...
+    event = put!(SM1.gate[“in”])     # an event is read from an input channel
+    step!(SM1, event)                # and a state machine transition is called
+end
 ```
 """
-abstract type StateMachine end
+abstract type Model end
 
 """
     State
@@ -67,7 +66,7 @@ state type.
 # Examples
 ```julia
 struct Idle <: State end                        # a state type is declared
-step!(p::Process, ::Idle, σ::Failure) = [....]  # step! dispatches on a state type
+step!(p::StateMachine, ::Idle, σ::Failure) = [....]  # step! dispatches on a state type
 p.state = Idle()                                # a process gets a state instance
 step!(p, p.state, Failure(5))                   # step! is called with a state instance
 ```
@@ -80,21 +79,21 @@ abstract type SEvent end
 """
     Box(id::Id, clk::Clock)
 
-A box is the outermost container of blocks and processes. It has one or more
-input channels and one or more output channels. It cannot contain other boxes,
-but it can interact with other boxes.
+A box is the outermost container of blocks and state machines. It has a clock,
+a composite state and one or more input/output channels. It cannot contain other
+boxes, but it can interact with other boxes.
 
 # Arguments, Fields
 - `id::Id`: an identifier string
 - `clk::Clock`: the system clock, this may be a clock shared with other boxes,
 - `state::State`:
 - `gate::Dict{Id, Channel}`: a dictionary of channels,
-- `childs::Dict{Id, System}`: a dictionary of registered blocks or processes.
+- `childs::Dict{Id, System}`: a dictionary of registered blocks or state machines.
 """
 mutable struct Box <: System
     id::Id
     clk::Clock
-    state::State
+    cstate::State
     gate::Dict{Id, Channel}
     childs::Dict{Id, System}
 
@@ -105,20 +104,21 @@ end
 """
     Block(id::Id, surr::System)
 
-A block is a container of blocks and processes. It has one or more input
-and one or more output channels. It registers to a `System`.
+A block is a container of blocks and state machines. It has one or more input/output
+channels. It registers to a system `Box` or to an higher block. It has a
+composite state.
 
 # Arguments, Fields
 - `id::Id`: each block in a surrounding has to have an unique identifier,
-- `surr::System`: this links to the surrounding `Block` or `System`,
-- `state::State`:
+- `surr::System`: this links to the surrounding system `Block` or `Box`,
+- `cstate::State`: a composite state of the underlying system,
 - `gate::Dict{Id, Channel}`: a dictionary of channels,
-- `childs::Dict{Id, System}`: a dictionary of registered agents.
+- `childs::Dict{Id, System}`: a dictionary of registered blocks or state machines.
 """
 mutable struct Block <: System
     id::Id
     surr::System
-    state::State
+    cstate::State
     gate::Dict{Id, Channel}
     childs::Dict{Id, System}
 
@@ -127,28 +127,35 @@ mutable struct Block <: System
 end
 
 """
-    Process{SM}(id::Id, sm::SM, surr::System) where {SM <: StateMachine}
+    StateMachine{M}(id::Id, m::M, surr::System) where {M <: Model}
 
-A process is a container for a state machine. It cannot contain other processes.
-It has one input and one output channel. It registers to a `Block` or a `System`.
+A state machine operates a model. It has at least one input/output channel.
+It registers to a `Block` or a `System`.
 
 # Arguments, Fields
 - `id::Id`: each process in a box or a block has to have an unique identifier,
-- `sm::SM`: a state machine identifier
+- `m::M`: a model identifier,
+- `cstate::State`: the composite state of the state machine,
 - `surr::System`: links to the surrounding `Block` or `System`,
-- `state::State`: this is read and changed by the process's state machine,
 - `gate::Dict{Id, Channel}`: events and tokens flow through the gates, each gate
     has an unique identifier.
+- `state::State`: the internal state is used to operate the state machine,
+- `var::Dict{Id, Any}`: a dictionary of local variables, each with a unique Id.
+- `childs::Dict{Id, System}`: a dictionary of registered sub machines.
 """
-mutable struct Process{SM <: StateMachine} <: System
+mutable struct StateMachine{M <: Model} <: System
     id::Id
-    sm::SM
+    m::M
+    cstate::State
     surr::System
-    state::State
     gate::Dict{Id, Channel}
+    state::State
+    var::Dict{Id, Any}
+    childs::Dict{Id, System}
 
-    Process{SM}(id::Id, sm::SM, surr::System) where {SM <: StateMachine} =
-            new(id, sm, surr, Undefined(), Dict{Id, Channel}())
+    StateMachine{M}(id::Id, m::M, surr::System) where {M <: Model} =
+            new(id, m, Undefined(), surr, Dict{Id, Channel}(),
+                Undefined(), Dict{Id, Any}(), Dict{Id, System}())
 
-    Process(id::Id, sm, surr::System) = Process{typeof(sm)}(id, sm, surr)
+    StateMachine(id::Id, m::Model, surr::System) = StateMachine{typeof(m)}(id, m, surr)
 end
