@@ -13,7 +13,7 @@ A [Julia](https://julialang.org) package for state machines.
 
 1. the outer *box* provides a clock and an interface to the environment and contains *blocks* and *state machines*.
 2. Blocks can be nested and used to construct more and deeper levels.
-3. State machines implement the model behavior with defined *transitions* between their *states*. Through *actions* processes change their environment and communicate with other processes or blocks via *channels*.
+3. State machines implement the system *behavior* with defined *transitions* between their *states*. Through *actions* processes change their environment and communicate with other processes or blocks via *channels*.
 
 ### Examples
 

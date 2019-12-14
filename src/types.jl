@@ -2,7 +2,7 @@
 #
 # Paul Bayer
 # MIT License
-# Github: https://github.com/pbayer/Models.jl
+# Github: https://github.com/pbayer/StateMachines.jl
 #
 
 """
@@ -16,28 +16,29 @@ const Id = AbstractString
 abstract type System end
 
 """
-    Model
+    Behavior
 
-An abstract type used to declare the types of state machines, you want to implement.
+State machines implement different behaviors. Therefore we have this abstract
+type to differentiate between state machines and to correctly dispatch on them.
 
 # Example
 ```julia
 using StateMachines, Simulate
 
-struct M1 <: Model end               # define the models
-struct M2 <: Model end
+struct B1 <: Behavior end              # define the behaviors
+struct B2 <: Behavior end
 
-S1 = Box("Box", 𝐶)                   # define their environment,
-B1 = Block("B1", S1)                 # maybe containing one or more blocks
+S1 = Box("Box", 𝐶)                     # define the environment,
+Blk1 = Block("Blk1", S1)               # maybe containing one or more blocks
 
-SM1 = StateMachine("SM1", M1(), B1)  # create state machine variables
-SM2 = StateMachine("SM2", M2(), B1)
+SM1 = StateMachine("SM1", B1(), Blk1)  # create state machine variables with
+SM2 = StateMachine("SM2", B2(), Blk1)  # specified behaviors and suroundings
 
-function step!(A::StateMachine{M1}, ::Idle, σ::Load)  # transition functions
-    [....]                                            # implement their behaviour
+function step!(A::StateMachine{B1}, ::Idle, σ::Load)  # transition functions
+    [....]                                            # implement the behaviour
 end
-function step!(A::StateMachine{M1}, ::Busy, σ::Fail) = [....]
-function step!(A::StateMachine{M1}, ::Failed, ::Repair) = [....]
+function step!(A::StateMachine{B1}, ::Busy, σ::Fail) = [....]
+function step!(A::StateMachine{B1}, ::Failed, ::Repair) = [....]
 [....]
 
 while true                           # later at runtime ...
@@ -46,7 +47,7 @@ while true                           # later at runtime ...
 end
 ```
 """
-abstract type Model end
+abstract type Behavior end
 
 """
     State
@@ -88,14 +89,14 @@ boxes, but it can interact with other boxes.
 - `clk::Clock`: the system clock, this may be a clock shared with other boxes,
 - `state::State`:
 - `gate::Dict{Id, Channel}`: a dictionary of channels,
-- `childs::Dict{Id, System}`: a dictionary of registered blocks or state machines.
+- `child::Dict{Id, System}`: a dictionary of registered blocks or state machines.
 """
 mutable struct Box <: System
     id::Id
     clk::Clock
     cstate::State
     gate::Dict{Id, Channel}
-    childs::Dict{Id, System}
+    child::Dict{Id, System}
 
     Box(id::Id, clk::Clock) =
             new(id, clk, Undefined(), Dict{Id, Channel}(), Dict{Id, System}())
@@ -113,37 +114,40 @@ composite state.
 - `surr::System`: this links to the surrounding system `Block` or `Box`,
 - `cstate::State`: a composite state of the underlying system,
 - `gate::Dict{Id, Channel}`: a dictionary of channels,
-- `childs::Dict{Id, System}`: a dictionary of registered blocks or state machines.
+- `child::Dict{Id, System}`: a dictionary of registered blocks or state machines.
 """
 mutable struct Block <: System
     id::Id
     surr::System
     cstate::State
     gate::Dict{Id, Channel}
-    childs::Dict{Id, System}
+    child::Dict{Id, System}
 
     Block(id::Id, surr::System) =
             new(id, surr, Undefined(), Dict{Id, Channel}(), Dict{Id, System}())
 end
 
 """
-    StateMachine{M}(id::Id, m::M, surr::System) where {M <: Model}
+```
+StateMachine{M}(id::Id, m::M, surr::System) where {M <: Behavior}
+StateMachine(id::Id, m::Behavior, surr::System)
+```
 
-A state machine operates a model. It has at least one input/output channel.
-It registers to a `Block` or a `System`.
+A state machine operates a [`Behavior`](@ref). It has at least one input/output channel.
+It registers to a [`Block`](@ref) or a [`System`](@ref).
 
 # Arguments, Fields
 - `id::Id`: each process in a box or a block has to have an unique identifier,
 - `m::M`: a model identifier,
 - `cstate::State`: the composite state of the state machine,
-- `surr::System`: links to the surrounding `Block` or `System`,
+- `surr::System`: links to the surrounding [`Block`](@ref) or [`System`](@ref),
 - `gate::Dict{Id, Channel}`: events and tokens flow through the gates, each gate
     has an unique identifier.
 - `state::State`: the internal state is used to operate the state machine,
 - `var::Dict{Id, Any}`: a dictionary of local variables, each with a unique Id.
-- `childs::Dict{Id, System}`: a dictionary of registered sub machines.
+- `child::Dict{Id, System}`: a dictionary of registered sub machines.
 """
-mutable struct StateMachine{M <: Model} <: System
+mutable struct StateMachine{M <: Behavior} <: System
     id::Id
     m::M
     cstate::State
@@ -151,11 +155,12 @@ mutable struct StateMachine{M <: Model} <: System
     gate::Dict{Id, Channel}
     state::State
     var::Dict{Id, Any}
-    childs::Dict{Id, System}
+    child::Dict{Id, StateMachine}
+    task::Union{Nothing, Task}
 
-    StateMachine{M}(id::Id, m::M, surr::System) where {M <: Model} =
+    StateMachine{M}(id::Id, m::M, surr::System) where {M <: Behavior} =
             new(id, m, Undefined(), surr, Dict{Id, Channel}(),
-                Undefined(), Dict{Id, Any}(), Dict{Id, System}())
+                Undefined(), Dict{Id, Any}(), Dict{Id, StateMachine}(), nothing)
 
-    StateMachine(id::Id, m::Model, surr::System) = StateMachine{typeof(m)}(id, m, surr)
+    StateMachine(id::Id, m::Behavior, surr::System) = StateMachine{typeof(m)}(id, m, surr)
 end

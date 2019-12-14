@@ -4,13 +4,9 @@
 
 A [`System`](@ref) has different representations or levels:
 
-1. The outer [`Box`](@ref) provides a clock and an interface to the environment and
-  contains *blocks* and *processes*.
-2. A [Block`](@ref) can be nested and used to construct more and deeper system levels.
-  It contains blocks and processes.
-3. A [`StateMachine`](@ref) is used to implement the behaviour of a [`Model`](@ref)
-  with defined *transitions* between *states*. Through *actions* state machines change
-  their environment and communicate with other processes or blocks via *channels*.
+1. The outer [`Box`](@ref) provides a clock and an interface to the environment and contains *blocks* and *processes*.
+2. A [Block`](@ref) can be nested and used to construct more and deeper system levels. It contains blocks and processes.
+3. A [`StateMachine`](@ref) is used to implement the system [`Behavior`](@ref) with defined *transitions* between *states*. Through *actions* state machines change their environment and communicate with other processes or blocks via *channels*.
 
 ## Installation
 

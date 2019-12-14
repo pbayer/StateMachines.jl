@@ -33,9 +33,9 @@ Box
 Block
 ```
 
-`Model` and `StateMachine` are used to describe the activities of a system
+`Behavior` and `StateMachine` are used to describe the activities of a system
 ```@docs
-Model
+Behavior
 StateMachine
 ```
 

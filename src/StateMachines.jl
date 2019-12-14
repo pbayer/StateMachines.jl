@@ -28,14 +28,15 @@ using Simulate
 include("types.jl")
 include("box.jl")
 include("block.jl")
-include("process.jl")
+include("statemachine.jl")
 include("state.jl")
 include("event.jl")
 include("transition.jl")
+include("action.jl")
 
 
 export  SEvent,
         State,
-        System, Model, StateMachine, Box, Block, step!
+        System, Behavior, StateMachine, Box, Block, step!
 
 end # module

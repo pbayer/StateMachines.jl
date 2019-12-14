@@ -14,6 +14,10 @@ end
     include("test_block.jl")
 end
 
+@testset "statemachine.jl" begin
+    include("test_statemachine.jl")
+end
+
 @testset "state.jl" begin
     include("test_state.jl")
 end
@@ -24,4 +28,8 @@ end
 
 @testset "transition.jl" begin
     include("test_transition.jl")
+end
+
+@testset "action.jl" begin
+    include("test_action.jl")
 end
