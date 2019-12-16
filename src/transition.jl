@@ -7,7 +7,7 @@
 
 
 """
-    step!(A::StateMachine, q::State, σ::SEvent)
+    step!(A::StateMachine, q::AbstractState, σ::AbstractEvent)
 
 transition function δ causing a state machine A in state q₁ at event σ
 to take on a new state q₂.
@@ -18,10 +18,10 @@ called and a warning is generated.
 
 # Arguments
 - `A::StateMachine`: a state machine
-- `q::State`: any state ∈ Q
-- `σ::SEvent`: any discrete event ∈ Σ
+- `q::AbstractState`: any state ∈ Q
+- `σ::AbstractEvent`: any discrete event ∈ Σ
 """
-function step!(A::StateMachine, q::State, σ::SEvent)
+function step!(A::StateMachine, q::AbstractState, σ::AbstractEvent)
     at = ""
     try
         if !isa(A.sim, Number)

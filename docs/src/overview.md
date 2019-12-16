@@ -26,9 +26,40 @@ it represents a composite state like `Down()` or `Alerted()` or a domain event, 
 A [`StateMachine`](@ref) is the basic operating unit of our framework. It implements the [`Behavior`](@ref) and the actions of the system, reacts to events and changes system states. A state machine has a composite state and represents a behavior through transitions between states and may contain sub state machines.
 
 ### State
+> A State models a situation in the execution of a StateMachine Behavior during
+> which some invariant condition holds. \
+> (UML 2.5 14.2.3.4)
+
+- simple
+- composite
+- orthogonal → regions
+- submachine → submachines
+- pseudostates
+  - initial
+  - deep history
+  - shallow history
+  - join
+  - fork
+  - junction
+  - choice
+  - entry point
+  - exit point
+  - terminate
+
 
 ### Event
+> An Event is the specification of some occurrence that may potentially trigger
+> behavioral effects. \
+> (UML 2.5 13.3.3.1)
+
+- message
+- change → change variable, conditional event
+- time
 
 ### Transition
+- external
+- internal
+- local
+- compound transition → involving submachines, regions …
 
 ### Action

@@ -72,10 +72,10 @@ p.state = Idle()                                # a process gets a state instanc
 step!(p, p.state, Failure(5))                   # step! is called with a state instance
 ```
 """
-abstract type State end
 
+abstract type AbstractState end
 
-abstract type SEvent end
+abstract type AbstractEvent end
 
 """
     Box(id::Id, clk::Clock)
@@ -87,14 +87,14 @@ boxes, but it can interact with other boxes.
 # Arguments, Fields
 - `id::Id`: an identifier string
 - `clk::Clock`: the system clock, this may be a clock shared with other boxes,
-- `state::State`:
+- `state::AbstractState`:
 - `gate::Dict{Id, Channel}`: a dictionary of channels,
 - `child::Dict{Id, System}`: a dictionary of registered blocks or state machines.
 """
 mutable struct Box <: System
     id::Id
     clk::Clock
-    cstate::State
+    cstate::AbstractState
     gate::Dict{Id, Channel}
     child::Dict{Id, System}
 
@@ -119,7 +119,7 @@ composite state.
 mutable struct Block <: System
     id::Id
     surr::System
-    cstate::State
+    cstate::AbstractState
     gate::Dict{Id, Channel}
     child::Dict{Id, System}
 
@@ -139,7 +139,7 @@ It registers to a [`Block`](@ref) or a [`System`](@ref).
 # Arguments, Fields
 - `id::Id`: each process in a box or a block has to have an unique identifier,
 - `m::M`: a model identifier,
-- `cstate::State`: the composite state of the state machine,
+- `cstate::AbstractState`: the composite state of the state machine,
 - `surr::System`: links to the surrounding [`Block`](@ref) or [`System`](@ref),
 - `gate::Dict{Id, Channel}`: events and tokens flow through the gates, each gate
     has an unique identifier.
@@ -150,10 +150,10 @@ It registers to a [`Block`](@ref) or a [`System`](@ref).
 mutable struct StateMachine{M <: Behavior} <: System
     id::Id
     m::M
-    cstate::State
+    cstate::AbstractState
     surr::System
     gate::Dict{Id, Channel}
-    state::State
+    state::AbstractState
     var::Dict{Id, Any}
     child::Dict{Id, StateMachine}
     task::Union{Nothing, Task}

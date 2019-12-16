@@ -8,8 +8,7 @@
 """
     StateMachines
 
-A Julia package for state machines following loosely the system design language
-[SDL](http://sdl-forum.org/index.htm).
+A Julia package for state machines.
 
 It can (after registration) be installed with:
 ```julia
@@ -35,8 +34,9 @@ include("transition.jl")
 include("action.jl")
 
 
-export  SEvent,
-        State,
+export  AbstractEvent, MessageEvent, ChangeEvent, TimeEvent,
+        AbstractState, SimpleState, CompositeState, OrthogonalState,
+        SubmachineState, PseudoState,
         System, Behavior, StateMachine, Box, Block, step!
 
 end # module
