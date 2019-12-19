@@ -29,8 +29,6 @@ A system has different levels, which are used to hide complexity.
 ```@docs
 Id
 System
-Box
-Block
 ```
 
 `Behavior` and `StateMachine` are used to describe the activities of a system
@@ -43,6 +41,12 @@ StateMachine
 
 ### States
 ```@docs
+AbstractState
+SimpleState
+CompositeState
+OrthogonalState
+SubmachineState
+PseudoState
 ```
 
 ### Events

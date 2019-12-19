@@ -6,19 +6,6 @@
 #
 
 """
-    clock(A::StateMachine)::Clock
-
-Returns the system clock of a state machine.
-"""
-function clock(A::StateMachine)::Clock
-    agent = A
-    while !isa(agent.surr, Box)
-        agent = agent.surr
-    end
-    return agent.surr.clk
-end
-
-"""
     operate(A::StateMachine, input::Id, output::Id)
 
 Operate a state machine. If needed, create input and output channels.

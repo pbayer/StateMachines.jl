@@ -1,12 +1,12 @@
 # StateMachines.jl
 
-`StateMachines.jl` provides a practical way to describe, model and simulate communicating and queueing systems  in Julia.
+a framework for state machines in Julia. It supports:
 
-A [`System`](@ref) has different representations or levels:
+- hierarchical state machines (HSM) as described by [UML statecharts](https://en.wikipedia.org/wiki/UML_state_machine),
+- but also [precursor state diagrams](https://en.wikipedia.org/wiki/State_diagram) like Harel statecharts or Moore and Mealy machines
 
-1. The outer [`Box`](@ref) provides a clock and an interface to the environment and contains *blocks* and *processes*.
-2. A [Block`](@ref) can be nested and used to construct more and deeper system levels. It contains blocks and processes.
-3. A [`StateMachine`](@ref) is used to implement the system [`Behavior`](@ref) with defined *transitions* between *states*. Through *actions* state machines change their environment and communicate with other processes or blocks via *channels*.
+With it reactive systems like communication or queueing systems can be modeled
+and implemented.
 
 ## Installation
 

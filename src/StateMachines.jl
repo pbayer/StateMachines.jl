@@ -37,6 +37,15 @@ include("action.jl")
 export  AbstractEvent, MessageEvent, ChangeEvent, TimeEvent,
         AbstractState, SimpleState, CompositeState, OrthogonalState,
         SubmachineState, PseudoState,
-        System, Behavior, StateMachine, Box, Block, step!
+        System, Behavior, StateMachine, step!
+
+"""
+    trace
+
+a module variable used for debugging state machines. 
+Set `StateMachines.trace = true` if you want to have messages for
+undefined transitions.
+"""
+trace = false
 
 end # module

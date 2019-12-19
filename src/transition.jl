@@ -12,24 +12,15 @@
 transition function δ causing a state machine A in state q₁ at event σ
 to take on a new state q₂.
 
-For all specified transitions Δ: Q × Σ → P(Q) of A a `step!`-function has to
-be implemented. For unspecified transitions a fallback step function is
-called and a warning is generated.
+For all specified transitions of A a `step!(A, q, σ)`-function has to
+be implemented. The fallback step function does nothing and is called for all
+other calls to `step!(A, q, σ)`.
 
 # Arguments
 - `A::StateMachine`: a state machine
 - `q::AbstractState`: any state ∈ Q
 - `σ::AbstractEvent`: any discrete event ∈ Σ
 """
-function step!(A::StateMachine, q::AbstractState, σ::AbstractEvent)
-    at = ""
-    try
-        if !isa(A.sim, Number)
-            at = "at $(now(A.sim))"
-        end
-    catch
-    end
-    name = hasfield(typeof(A), :name) ? A.name : ""
-    println(stderr, "Warning: undefined transition $at for ",
-            "$name: step!(::$(typeof(A)), ::$(typeof(q)), ::$(typeof(σ)))")
+function step!(A::StateMachine, q::AbstractState, σ::AbstractEvent) 
+    trace ? println(stderr, "undefined transition: $(A.id), $(typeof(q)), $(typeof(σ))") : nothing
 end
